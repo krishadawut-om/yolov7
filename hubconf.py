@@ -9,13 +9,14 @@ from pathlib import Path
 
 import torch
 
-from models.yolo import Model, attempt_load
+from pose_models.yolo import Model, attempt_load
 from utils.general import check_requirements, set_logging
 from utils.google_utils import attempt_download
 from utils.torch_utils import select_device
 
 dependencies = ['torch', 'yaml']
-check_requirements(Path(__file__).parent / 'requirements.txt', exclude=('tensorboard', 'pycocotools', 'thop'))
+check_requirements(Path(__file__).parent / 'requirements.txt',
+                   exclude=('tensorboard', 'pycocotools', 'thop'))
 
 
 def create(name, pretrained, channels, classes, autoshape, verbose):
@@ -36,22 +37,30 @@ def create(name, pretrained, channels, classes, autoshape, verbose):
     fname = f'{name}.pt'  # checkpoint filename
     try:
         if pretrained and channels == 3 and classes == 80:
-            model = attempt_load(fname, map_location=torch.device('cpu'))  # download/load FP32 model
+            # download/load FP32 model
+            model = attempt_load(fname, map_location=torch.device('cpu'))
         else:
-            cfg = list((Path(__file__).parent / 'models').rglob(f'{name}.yaml'))[0]  # model.yaml path
+            # model.yaml path
+            cfg = list((Path(__file__).parent /
+                       'models').rglob(f'{name}.yaml'))[0]
             model = Model(cfg, channels, classes)  # create model
             if pretrained:
                 attempt_download(fname)  # download if not found locally
-                ckpt = torch.load(fname, map_location=torch.device('cpu'))  # load
+                ckpt = torch.load(
+                    fname, map_location=torch.device('cpu'))  # load
                 msd = model.state_dict()  # model state_dict
-                csd = ckpt['model'].float().state_dict()  # checkpoint state_dict as FP32
-                csd = {k: v for k, v in csd.items() if msd[k].shape == v.shape}  # filter
+                # checkpoint state_dict as FP32
+                csd = ckpt['model'].float().state_dict()
+                csd = {k: v for k, v in csd.items(
+                ) if msd[k].shape == v.shape}  # filter
                 model.load_state_dict(csd, strict=False)  # load
                 if len(ckpt['model'].names) == classes:
-                    model.names = ckpt['model'].names  # set class names attribute
+                    # set class names attribute
+                    model.names = ckpt['model'].names
         if autoshape:
             model = model.autoshape()  # for file/URI/PIL/cv2/np inputs and NMS
-        device = select_device('0' if torch.cuda.is_available() else 'cpu')  # default to GPU if available
+        # default to GPU if available
+        device = select_device('0' if torch.cuda.is_available() else 'cpu')
         return model.to(device)
 
     except Exception as e:
@@ -73,7 +82,8 @@ def custom(path_or_model='path/to/model.pt', autoshape=True, verbose=True):
     """
     set_logging(verbose=verbose)
 
-    model = torch.load(path_or_model) if isinstance(path_or_model, str) else path_or_model  # load checkpoint
+    model = torch.load(path_or_model) if isinstance(
+        path_or_model, str) else path_or_model  # load checkpoint
     if isinstance(model, dict):
         model = model['ema' if model.get('ema') else 'model']  # load model
 
@@ -82,7 +92,8 @@ def custom(path_or_model='path/to/model.pt', autoshape=True, verbose=True):
     hub_model.names = model.names  # class names
     if autoshape:
         hub_model = hub_model.autoshape()  # for file/URI/PIL/cv2/np inputs and NMS
-    device = select_device('0' if torch.cuda.is_available() else 'cpu')  # default to GPU if available
+    # default to GPU if available
+    device = select_device('0' if torch.cuda.is_available() else 'cpu')
     return hub_model.to(device)
 
 
@@ -127,7 +138,8 @@ def yolov5x6(pretrained=True, channels=3, classes=80, autoshape=True, verbose=Tr
 
 
 if __name__ == '__main__':
-    model = create(name='yolov5s', pretrained=True, channels=3, classes=80, autoshape=True, verbose=True)  # pretrained
+    model = create(name='yolov5s', pretrained=True, channels=3,
+                   classes=80, autoshape=True, verbose=True)  # pretrained
     # model = custom(path_or_model='path/to/model.pt')  # custom
 
     # Verify inference
