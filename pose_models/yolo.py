@@ -1,9 +1,9 @@
 # YOLOv5 YOLO-specific modules
 
-from utils.torch_utils import time_synchronized, fuse_conv_and_bn, model_info, scale_img, initialize_weights, \
+from pose_utils.torch_utils import time_synchronized, fuse_conv_and_bn, model_info, scale_img, initialize_weights, \
     select_device, copy_attr
-from utils.general import make_divisible, check_file, set_logging
-from utils.autoanchor import check_anchor_order
+from pose_utils.general import make_divisible, check_file, set_logging
+from pose_utils.autoanchor import check_anchor_order
 from pose_models.experimental import *
 from pose_models.common import *
 import argparse

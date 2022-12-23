@@ -4,9 +4,9 @@ Usage:
     $ export PYTHONPATH="$PWD" && python models/export.py --weights yolov5s.pt --img 640 --batch 1
 """
 
-from utils.torch_utils import select_device
-from utils.general import colorstr, check_img_size, check_requirements, file_size, set_logging
-from utils.activations import Hardswish, SiLU
+from pose_utils.torch_utils import select_device
+from pose_utils.general import colorstr, check_img_size, check_requirements, file_size, set_logging
+from pose_utils.activations import Hardswish, SiLU
 from pose_models.experimental import attempt_load
 import pose_models
 import numpy as np

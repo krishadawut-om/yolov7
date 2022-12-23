@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 
 from pose_models.common import Conv, DWConv
-from utils.google_utils import attempt_download
+from pose_utils.google_utils import attempt_download
 
 
 class CrossConv(nn.Module):

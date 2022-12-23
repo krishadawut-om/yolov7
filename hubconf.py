@@ -10,9 +10,9 @@ from pathlib import Path
 import torch
 
 from pose_models.yolo import Model, attempt_load
-from utils.general import check_requirements, set_logging
-from utils.google_utils import attempt_download
-from utils.torch_utils import select_device
+from pose_utils.general import check_requirements, set_logging
+from pose_utils.google_utils import attempt_download
+from pose_utils.torch_utils import select_device
 
 dependencies = ['torch', 'yaml']
 check_requirements(Path(__file__).parent / 'requirements.txt',
