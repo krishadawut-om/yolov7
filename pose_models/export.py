@@ -69,7 +69,7 @@ if __name__ == '__main__':
     # Update model
     for k, m in model.named_modules():
         m._non_persistent_buffers_set = set()  # pytorch 1.6.0 compatibility
-        if isinstance(m, models.common.Conv):  # assign export-friendly activations
+        if isinstance(m, pose_models.common.Conv):  # assign export-friendly activations
             if isinstance(m.act, nn.Hardswish):
                 m.act = Hardswish()
             elif isinstance(m.act, nn.SiLU):
@@ -82,8 +82,8 @@ if __name__ == '__main__':
         y = model(img)  # dry runs
     output_names = None
     if opt.export_nms:
-        nms = models.common.NMS(conf=0.01, kpt_label=True)
-        nms_export = models.common.NMS_Export(conf=0.01, kpt_label=True)
+        nms = pose_models.common.NMS(conf=0.01, kpt_label=True)
+        nms_export = pose_models.common.NMS_Export(conf=0.01, kpt_label=True)
         y_export = nms_export(y)
         y = nms(y)
         #assert (torch.sum(torch.abs(y_export[0]-y[0]))<1e-6)
