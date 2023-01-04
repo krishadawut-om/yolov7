@@ -28,7 +28,7 @@ def autopad(k, p=None):  # kernel, padding
 
 class MultiInput(nn.Module):
     def __init__(self):
-        super(SimpleConv, self).__init__()
+        super(MultiInput, self).__init__()
         self.features = nn.Sequential(
             nn.Conv2d(3, 3, kernel_size=3, stride=1, padding=1),
             nn.Conv2d(3, 1, kernel_size=3, stride=1, padding=1),
