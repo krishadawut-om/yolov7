@@ -26,7 +26,27 @@ def autopad(k, p=None):  # kernel, padding
         p = k // 2 if isinstance(k, int) else [x // 2 for x in k]  # auto-pad
     return p
 
+class MutiInput(nn.Module):
+    def __init__(self):
+        super(SimpleConv, self).__init__()
+        self.features = nn.Sequential(
+            nn.Conv2d(3, 3, kernel_size=3, stride=1, padding=1),
+            nn.Conv2d(3, 1, kernel_size=3, stride=1, padding=1),
+            nn.Conv2d(1, 1, kernel_size=3, stride=1, padding=1),
+        )
+        self.combine_features = nn.Sequential(
+            nn.Conv2d(3, 3, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+        )
 
+    def forward(self, x, y,z):
+        x1 = self.features(x)
+        x2 = self.features(y)
+        x3 = self.features(z)
+        x = torch.cat((x1, x2, x3), 1)
+        x = self.combine_features(x)
+        return x
+    
 class MP(nn.Module):
     def __init__(self, k=2):
         super(MP, self).__init__()
