@@ -26,7 +26,7 @@ def autopad(k, p=None):  # kernel, padding
         p = k // 2 if isinstance(k, int) else [x // 2 for x in k]  # auto-pad
     return p
 
-class MutiInput(nn.Module):
+class MultiInput(nn.Module):
     def __init__(self):
         super(SimpleConv, self).__init__()
         self.features = nn.Sequential(
