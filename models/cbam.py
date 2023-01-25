@@ -144,6 +144,7 @@ class SE_CBAM(nn.Module):
         self.se = SENet(in_channels, reduction_ratio)
 
     def forward(self, x):
-        y = self.cbam(x)
-        z = self.se(x)
-        return y*z
+        x = self.se(x)
+        x = self.cbam(x)
+        return x
+    
